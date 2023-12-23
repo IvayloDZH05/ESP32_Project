@@ -1,5 +1,3 @@
-#include "WiFi.h"
-//#include "SPIFFS.h"
 #include "esp_camera.h"
 #include "esp_timer.h"
 #include "img_converters.h"
@@ -7,12 +5,12 @@
 #include "soc/soc.h"           // Disable brownout problems
 #include "soc/rtc_cntl_reg.h"  // Disable brownout problems
 #include "driver/rtc_io.h"
-#include "FS.h"                // SD Card ESP32
 #include <LittleFS.h>
-//#include "SD_MMC.h"            // SD Card ESP32
-#include <ESPAsyncWebServer.h>
+#include "WiFi.h"
 #include <StringArray.h>
 //#include <SD.h>
+#include <AsyncTCP.h>
+#include <ESPAsyncWebServer.h>
 #include <ESP_Mail_Client.h>
 #include <WebSocketsServer.h>
 
