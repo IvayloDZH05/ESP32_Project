@@ -132,7 +132,6 @@ void handleWebSocketText(uint8_t num, uint8_t *payload, size_t length) {
     }
 }
 
-
 void handleWebSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
     switch (type) {
         case WStype_DISCONNECTED:
@@ -231,13 +230,6 @@ server.on("/capture", HTTP_GET, [](AsyncWebServerRequest *request) {
     // Send a response message to the client
     request->send(200, "text/plain", successMessage);
 });
-
-// Handler for the "/photo-status" route
-server.on("/photo-status", HTTP_GET, [photoCaptureSuccess](AsyncWebServerRequest *request) {
-    // Send the photo capture status as a response
-    request->send(200, "text/plain", photoCaptureSuccess ? "success" : "failure");
-});
-
 // Handler for the "/action" route
 server.on("/action", HTTP_GET, handleFlashAction);
 
@@ -247,18 +239,18 @@ server.on("/email-photo", HTTP_GET, [](AsyncWebServerRequest *request) {
   request->send(200, "text/plain", "Sending Photo");
 });
 
+server.on("/saved-photo", HTTP_GET, [](AsyncWebServerRequest *request) {
+    // Open the photo file for reading
+    File file = LittleFS.open(FILE_PHOTO_PATH, "r");
 
-//  Receive an HTTP GET request at <ESP_IP>/get?email_input=<inputMessage>
-//  server.on("/get", HTTP_GET, [](AsyncWebServerRequest *request) {
-//    // GET email_input value on <ESP_IP>/get?email_input=<inputMessage>
-//    if (request->hasParam(PARAM_INPUT_1)) {
-//      inputMessage = request->getParam(PARAM_INPUT_1)->value();
-//    } else {
-//      inputMessage = "No message sent";
-//    }
-//    Serial.println(inputMessage);
-//    request->send(200, "text/html", "HTTP GET request sent to your ESP.<br><a href=\"/\">Return to Home Page</a>");
-//  });
+    if (file && file.size() > 0) {
+        // Set the content type based on the image format (e.g., JPEG)
+        request->send(LittleFS, FILE_PHOTO_PATH, "image/jpeg");
+    } else {
+        // If the file doesn't exist or is empty, send a 404 Not Found response
+        request->send(404, "text/plain", "Photo not found");
+    }
+});
 
   // Start server
   server.begin();
@@ -276,7 +268,7 @@ void loop() {
     }
     
   if (takeNewPhoto) {
-    capturePhotoSaveLittleFS  ();
+    capturePhotoSaveLittleFS();
     takeNewPhoto = false;
   }
   if (!emailSent){
