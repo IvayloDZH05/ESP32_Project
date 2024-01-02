@@ -82,7 +82,7 @@ function capturePhoto() {
     // Reload the page after capturing the photo
     setTimeout(function() {
         location.reload();
-    }, 3000); // Adjust the delay based on your server processing time
+    }, 1000); // Adjust the delay based on your server processing time
 }
 
 function emailPhoto() {
@@ -91,6 +91,15 @@ function emailPhoto() {
     xhr.send();
 }
 
+// Add onbeforeunload event
+window.onbeforeunload = function() {
+    // Perform cleanup actions here
+    // For example, you can send a message to the server indicating that the user is leaving
+    if (socket && socket.readyState == WebSocket.OPEN) {
+        socket.send("userLeaving");
+    }
+};
 </script>
+
 </body>
 </html>

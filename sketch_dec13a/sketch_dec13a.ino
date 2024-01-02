@@ -1,7 +1,6 @@
 #include "esp_camera.h"
 #include "esp_timer.h"
 #include "img_converters.h"
-#include "Arduino.h"
 #include "soc/soc.h"           // Disable brownout problems
 #include "soc/rtc_cntl_reg.h"  // Disable brownout problems
 #include "driver/rtc_io.h"
@@ -13,10 +12,15 @@
 #include <ESPAsyncWebServer.h>
 #include <ESP_Mail_Client.h>
 #include <WebSocketsServer.h>
+#include <PubSubClient.h>
 
 // Replace with your network credentials
 const char* ssid = "Rado's WIFI";
 const char* password = "NePipaiNeta6496";
+const char* mqttServer = "192.168.0.112";
+const int mqttPort = 1883;
+const char* mqttTopic = "motion-detected";
+
 
 // To send Emails using Gmail on port 465 (SSL), you need to create an app password: https://support.google.com/accounts/answer/185833
 #define emailSenderAccount    "esp326969@gmail.com"
@@ -28,13 +32,19 @@ const char* password = "NePipaiNeta6496";
 // Default Recipient Email Address
 String inputMessage = "19212@uktc-bg.com";
 
+WiFiClient espClient;
+PubSubClient client(espClient);
 WebSocketsServer webSocket = WebSocketsServer(81);
 AsyncWebServer server(80);
+
+
 uint8_t cam_num;
 bool connected = false;
 bool flashlightOn = false;
 bool photoCaptureSuccess = false;
+bool pirMotionDetected = false;  // Global variable to indicate motion detection
 
+bool emailSent = true;
 boolean takeNewPhoto = false;
 
 #define PWDN_GPIO_NUM 32
@@ -166,9 +176,28 @@ String processor(const String& var){
   return String();
 }
 
-// Flag variable to keep track if email notification was sent or not
-bool emailSent = true;
 const char* PARAM_INPUT_1 = "email_input";
+
+
+void reconnect() {
+  // Loop until we're reconnected
+  while (!client.connected()) {
+    Serial.print("Attempting MQTT connection...");
+    
+    // Attempt to connect
+    if (client.connect("ESP32Client")) {
+      Serial.println("connected!"); // Print a message on successful connection
+      // Once connected, subscribe to the topic
+      client.subscribe(mqttTopic);
+    } else {
+      Serial.print("failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" try again in 5 seconds");
+      // Wait 5 seconds before retrying
+      delay(5000);
+    }
+  }
+}
 
 void setup() {
   // Serial port for debugging purposes
@@ -204,6 +233,24 @@ if (!LittleFS.begin(true)) {
   // Turn-off the 'brownout detector'
   WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
 
+    // Set up MQTT
+  client.setServer(mqttServer, mqttPort);
+  client.setCallback(callback);
+
+    // Attempt to connect to the MQTT broker
+  if (client.connect("ESP32Client")) {
+    Serial.println("Connected to MQTT broker");
+
+    // Subscribe to the topic
+    if (client.subscribe(mqttTopic)) {
+      Serial.println("Subscribed to topic: " + String(mqttTopic));
+    } else {
+      Serial.println("Failed to subscribe to topic");
+    }
+  } else {
+    Serial.println("Failed to connect to MQTT broker");
+  }
+  
   webSocket.begin();
   webSocket.onEvent([](uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
     handleWebSocketEvent(num, type, payload, length);
@@ -256,40 +303,50 @@ server.on("/saved-photo", HTTP_GET, [](AsyncWebServerRequest *request) {
   server.begin();
   configCamera();
 }
-
-
 void loop() {
-      // Handle WebSocket events
-    webSocket.loop();
+  // Handle WebSocket events
+  webSocket.loop();
 
-    // If connected to WebSocket and streaming is enabled, perform camera operation
-    if (connected) {
-        liveCam(cam_num);
-    }
-    
+  // Handle MQTT messages
+  client.loop();
+
+  // If connected to WebSocket and streaming is enabled, perform camera operation
+  if (connected) {
+    liveCam(cam_num);
+  }
+
+  // If motion is detected, trigger actions
+  if (pirMotionDetected) {
+    Serial.println("Motion detected! Triggering functions...");
+    takeNewPhoto = true; // Trigger photo capture
+    pirMotionDetected = false; // Reset PIR motion flag
+  }
+
+  // Perform the desired functions
   if (takeNewPhoto) {
     capturePhotoSaveLittleFS();
     takeNewPhoto = false;
   }
-  if (!emailSent){
+  if (!emailSent) {
     String emailMessage = "Photo captured and emailed using an ESP32-CAM.";
-    if(sendEmailNotification(emailMessage)) {
+    if (sendEmailNotification(emailMessage)) {
       Serial.println(emailMessage);
       emailSent = true;
-    }
-    else {
+    } else {
       Serial.println("Email failed to send");
-    }    
+    }
   }
-  delay(1);
+
+  delay(100); // Adjust delay as needed for your application
 }
+
+
 bool checkPhoto( fs::FS &fs ) {
   File f_pic = fs.open(FILE_PHOTO_PATH);
   unsigned int pic_sz = f_pic.size();
   return ( pic_sz > 100 );
 }
 
-// Capture Photo and Save it to LittleFS
 void capturePhotoSaveLittleFS( void ) {
   camera_fb_t * fb = NULL; // pointer
   bool ok = 0; // Boolean indicating if the picture has been taken correctly
@@ -448,8 +505,25 @@ void handleFlashAction(AsyncWebServerRequest *request) {
             flashlightOn = true;
         } else if (actionValue == "off") {
             flashlightOn = false;
-        } 
+        }
     }
 
     request->send(200, "text/plain", "OK");
+}
+
+void callback(char *topic, byte *payload, unsigned int length) {
+    Serial.print("Message arrived [");
+    Serial.print(topic);
+    Serial.print("] ");
+    for (int i = 0; i < length; i++) {
+        Serial.print((char)payload[i]);
+    }
+    Serial.println();
+
+    // Check the received message and trigger capture and email functions if needed
+    if (strcmp(topic, mqttTopic) == 0) {
+        Serial.println("Motion detected via MQTT! Triggering functions...");
+        takeNewPhoto = true; // Trigger photo capture
+        emailSent = false;   // Allow email sending again
+    }
 }
