@@ -520,8 +520,7 @@ void callback(char *topic, byte *payload, unsigned int length) {
     }
     Serial.println();
 
-    // Check the received message and trigger capture and email functions if needed
-    if (strcmp(topic, mqttTopic) == 0) {
+    if (String(topic) == mqttTopic && String(payload, length) == "Motion Detected!"){
         Serial.println("Motion detected via MQTT! Triggering functions...");
         takeNewPhoto = true; // Trigger photo capture
         emailSent = false;   // Allow email sending again
