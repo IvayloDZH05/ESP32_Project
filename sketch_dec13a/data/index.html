@@ -32,6 +32,7 @@
 <script>
 var gateway = `ws://${window.location.hostname}/ws`;
 var socket;
+var userPresent = true; // Assume the user is initially present
 
 if (!('WebSocket' in window)) {
     alert('Your browser does not support web sockets');
@@ -64,7 +65,29 @@ function setupWebSocket() {
 
         socket.onclose = function () {
             console.log('WebSocket connection closed');
+
+            if (userPresent && socket.readyState == WebSocket.OPEN) {
+            socket.send("userLeaving");
         }
+        }
+
+        // Track the last time the mouse moved
+var lastMouseMoveTime = Date.now();
+
+document.addEventListener('mousemove', function() {
+    // Update the last mouse move time
+    lastMouseMoveTime = Date.now();
+});
+
+// Set up a timer to periodically check user presence
+setInterval(function() {
+    // Check if there has been mouse movement in the last minute
+    var currentTime = Date.now();
+    var userActive = currentTime - lastMouseMoveTime <= 60000;
+
+    // Notify ESP32-CAM about user presence
+    notifyUserPresence(userActive);
+}, 5000); // Adjust the interval based on your preference
     }
 }
 
@@ -99,6 +122,13 @@ window.onbeforeunload = function() {
         socket.send("userLeaving");
     }
 };
+
+function notifyUserPresence(present) {
+    userPresent = present;
+    if (socket && socket.readyState == WebSocket.OPEN) {
+        socket.send(present ? "userPresent" : "userNotPresent");
+    }
+}
 </script>
 
 </body>
