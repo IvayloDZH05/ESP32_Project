@@ -15,8 +15,8 @@
 #include <PubSubClient.h>
 
 // Replace with your network credentials
-const char* ssid = "NET1";
-const char* password = "803-_-308";
+const char* ssid = "UKTC";
+const char* password = "uktc1234";
 const char* mqttServer = "localhost";
 const int mqttPort = 1883;
 const char* mqttTopic = "active-cameras";
@@ -43,9 +43,14 @@ bool connected = false;
 bool flashlightOn = false;
 bool photoCaptureSuccess = false;
 bool pirMotionDetected = false;  // Global variable to indicate motion detection
+
 unsigned long lastMotionTime = 0;
 const int motionCheckInterval = 10000;
-bool userNotPresent = true;
+unsigned long lastPIRCheckTime = 0;
+
+bool userPresent = true;
+unsigned long lastUserPresentTime = 0; // Variable to store the timestamp of the last "UserPresent" message
+unsigned long lastUserNotPresentTime = 0; // Variable to store the timestamp of the last "UserNotPresent" message
 
 bool emailSent = true;
 boolean takeNewPhoto = false;
@@ -137,7 +142,8 @@ void liveCam(uint8_t num) {
     esp_camera_fb_return(fb);
 }
 
-bool pirTurnedOn = false;
+
+
 
 void handleWebSocketText(uint8_t num, uint8_t *payload, size_t length) {
     String command = String((char *)payload);
@@ -149,25 +155,25 @@ void handleWebSocketText(uint8_t num, uint8_t *payload, size_t length) {
 
     if (command == "userPresent") {
         Serial.println("User present");
-        // Turn off PIR sensor when the user is present
-//        if (pirTurnedOn) {
-//            digitalWrite(PIR_PIN, HIGH);
-//            pirTurnedOn = false;
-//            Serial.println("PIR sensor turned off");
-//        }
-            userNotPresent = false;
-       
+        // Check if there's a sufficient time gap since the last "UserPresent" message
+        if (millis() - lastUserPresentTime >= 5000) { // Adjust the delay as needed
+            // Set the user presence flag to true
+            userPresent = true;
+            // Update the timestamp for the current "UserPresent" message
+            lastUserPresentTime = millis();
+        }
     } else if (command == "userNotPresent") {
         Serial.println("User not present");
-        // Turn on PIR sensor when the user is not present
-//        if (!pirTurnedOn) {
-//            digitalWrite(PIR_PIN, LOW);
-//            pirTurnedOn = true;
-//            Serial.println("PIR sensor turned on");
-//        }
-        userNotPresent = true;
+        // Check if there's a sufficient time gap since the last "UserNotPresent" message
+        if (millis() - lastUserNotPresentTime >= 5000) { // Adjust the delay as needed
+            // Set the user presence flag to false
+            userPresent = false;
+            // Update the timestamp for the current "UserNotPresent" message
+            lastUserNotPresentTime = millis();
+        }
     }
 }
+
 
 
 void handleWebSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
@@ -230,6 +236,8 @@ void reconnect() {
 void setup() {
   // Serial port for debugging purposes
   Serial.begin(115200);
+  pinMode(PIR_PIN, INPUT);
+  Serial.println("PIR Sensor Initialized");
 
   // Connect to Wi-Fi
   WiFi.begin(ssid, password);
@@ -241,8 +249,7 @@ void setup() {
   String IP = WiFi.localIP().toString();
   Serial.println("\nWiFi connected, IP address: " + IP);
 
-  pinMode(PIR_PIN, INPUT);
-  Serial.println("PIR Sensor Initialized");
+
 
 if (!LittleFS.begin(true)) {
     Serial.println("An Error has occurred while mounting LittleFS");
@@ -332,6 +339,7 @@ server.on("/saved-photo", HTTP_GET, [](AsyncWebServerRequest *request) {
   server.begin();
   configCamera();
 }
+
 void loop() {
   // Handle WebSocket events
   webSocket.loop();
@@ -343,35 +351,40 @@ void loop() {
     liveCam(cam_num);
   }
 
-  // Check for motion using PIR sensor
-  if (digitalRead(PIR_PIN) == HIGH && userNotPresent) {
-    // Motion detected
-    if (!pirMotionDetected) {
-      pirMotionDetected = true;
-      lastMotionTime = millis(); // Record the time of motion
-      Serial.println("Motion detected! Triggering functions...");
-      takeNewPhoto = true; // Trigger photo capture
-    }
-  } else {
-    // No motion
-    pirMotionDetected = false;
-  }
-
-  // Check if it's time to perform the desired functions
-  if (takeNewPhoto) {
-    capturePhotoSaveLittleFS();
-    takeNewPhoto = false;
-  }
-  if (!emailSent && (millis() - lastMotionTime >= motionCheckInterval)) {
-    String emailMessage = "Photo captured and emailed using an ESP32-CAM.";
-    if (sendEmailNotification(emailMessage)) {
-      Serial.println(emailMessage);
-      emailSent = true;
-    } else {
-      Serial.println("Email failed to send");
-    }
+  // Check PIR sensor state every 10 seconds
+  if (millis() - lastPIRCheckTime >= 10000) {
+    checkPIRMotion();
+    lastPIRCheckTime = millis(); // Update the last check time
   }
 }
+
+
+// Define PIR_PIN only if it's not already defined
+#ifndef PIR_PIN
+#define PIR_PIN -1 // Use an invalid pin number if PIR_PIN is not defined
+#endif
+
+void checkPIRMotion() {
+    // Check if PIR_PIN is defined
+    #ifdef PIR_PIN
+    int pirState = digitalRead(PIR_PIN);
+
+    Serial.print("PIR State: ");
+    Serial.println(pirState);
+
+    if (!userPresent && pirState == HIGH) {
+        // Motion detected when the user is not present
+        Serial.println("Motion detected!");
+        capturePhotoSaveLittleFS();
+        sendEmailNotification("TEST");
+        delay(5000);  // Delay to avoid multiple triggers within a short time
+    }
+
+    delay(100);
+    #endif
+}
+
+
 
 
 bool checkPhoto( fs::FS &fs ) {
