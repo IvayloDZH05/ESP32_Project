@@ -37,6 +37,11 @@ background-size: var(--s) calc(var(--s) * 0.577);
     box-shadow: 0 0 20px #000000b6;
     max-width: 100%;
     margin-top: 30px;
+    margin-right: 30%;
+}
+#photo{
+    margin-top: 10px;
+    margin-right: 30%;
 }
 h1 {
     font-size: 2em;

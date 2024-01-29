@@ -15,14 +15,13 @@
 #include <PubSubClient.h>
 
 // Replace with your network credentials
-const char* ssid = "NET1";
-const char* password = "803-_-308";
+const char* ssid = "NOthingPhone_1";
+const char* password = "ivoRD2005";
 const char* mqttServer = "localhost";
 const int mqttPort = 1883;
-const char* mqttTopic = "active-cameras";
+const char* mqttTopic = "servo_control";
 
 
-// To send Emails using Gmail on port 465 (SSL), you need to create an app password: https://support.google.com/accounts/answer/185833
 #define emailSenderAccount    "esp326969@gmail.com"
 #define emailSenderPassword   "wfczkmzpktlsxuqj"
 #define smtpServer            "smtp.gmail.com"
@@ -333,26 +332,27 @@ server.on("/saved-photo", HTTP_GET, [](AsyncWebServerRequest *request) {
         // If the file doesn't exist or is empty, send a 404 Not Found response
         request->send(404, "text/plain", "Photo not found");
     }
-
-server.on("/move-left", HTTP_GET, [](AsyncWebServerRequest *request) {
-    // Add code to move the servo to the left
-    // This could involve sending a command to the ESP32 to control the servo
-    char command = 'L';
-    webSocket.sendBinary((uint8_t*)&command, sizeof(command));  // Send 'L' command to the ESP32 using sendBinary
-
-    // Send a response message to the client
-    request->send(200, "text/plain", "Moving servo left");
+    
 });
-
-server.on("/move-right", HTTP_GET, [](AsyncWebServerRequest *request) {
-    // Add code to move the servo to the right
-    // This could involve sending a command to the ESP32 to control the servo
-    char command = 'R';
-    webSocket.sendBinary((uint8_t*)&command, sizeof(command));  // Send 'R' command to the ESP32 using sendBinary
-
-    // Send a response message to the client
-    request->send(200, "text/plain", "Moving servo right");
-});
+//server.on("/move-left", HTTP_GET, [](AsyncWebServerRequest *request) {
+//    // Add code to move the servo to the left
+//    // This could involve sending a command to the ESP32 to control the servo
+//    char command = 'L';
+//    webSocket.sendBinary((uint8_t*)&command, sizeof(command));  // Send 'L' command to the ESP32 using sendBinary
+//
+//    // Send a response message to the client
+//    request->send(200, "text/plain", "Moving servo left");
+//});
+//
+//server.on("/move-right", HTTP_GET, [](AsyncWebServerRequest *request) {
+//    // Add code to move the servo to the right
+//    // This could involve sending a command to the ESP32 to control the servo
+//    char command = 'R';
+//    webSocket.sendBinary((uint8_t*)&command, sizeof(command));  // Send 'R' command to the ESP32 using sendBinary
+//
+//    // Send a response message to the client
+//    request->send(200, "text/plain", "Moving servo right");
+//});
 
   // Start server
   server.begin();

@@ -1,14 +1,20 @@
 #include <WiFi.h>
 #include <WebSocketsServer.h>
 #include <Servo.h>
+#include <PubSubClient.h>
 
 const char* ssid = "NET1";
 const char* password = "803-_-308";
+const char* mqttServer = "localhost";
+const int mqttPort = 1883;
+const char* mqttTopic = "servo_control";
 
 const int servoPin = 13; // Change to the pin where your servo is connected
 Servo myServo;
 
 WebSocketsServer webSocket = WebSocketsServer(81);
+WiFiClient espClient;
+PubSubClient client(espClient);
 
 void handleWebSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length) {
   switch (type) {
@@ -39,6 +45,32 @@ void handleServoCommand(char command) {
   }
 }
 
+void callback(char* topic, byte* payload, unsigned int length) {
+  // Handle MQTT messages
+  if (strcmp(topic, mqttTopic) == 0) {
+    char command = (char)payload[0];
+    handleServoCommand(command);
+  }
+}
+
+void reconnect() {
+  // Loop until we're reconnected to the MQTT broker
+  while (!client.connected()) {
+    Serial.println("Attempting MQTT connection...");
+    // Attempt to connect
+    if (client.connect("ESP32-Servo")) {
+      Serial.println("Connected to MQTT broker");
+      // Subscribe to the MQTT topic for servo control
+      client.subscribe(mqttTopic);
+    } else {
+      Serial.print("Failed, rc=");
+      Serial.print(client.state());
+      Serial.println(" Retrying in 5 seconds...");
+      delay(5000);
+    }
+  }
+}
+
 void setup() {
   Serial.begin(115200);
   myServo.attach(servoPin);
@@ -55,12 +87,23 @@ void setup() {
   webSocket.begin();
   webSocket.onEvent(handleWebSocketEvent);
 
+  // Set up MQTT client
+  client.setServer(mqttServer, mqttPort);
+  client.setCallback(callback);
+
   Serial.println("WebSocket server started");
 }
 
 void loop() {
   // Handle WebSocket events
   webSocket.loop();
+
+  // Reconnect to MQTT if necessary
+  if (!client.connected()) {
+    reconnect();
+  }
+  // Handle MQTT messages
+  client.loop();
 
   // Other loop code if needed
 }

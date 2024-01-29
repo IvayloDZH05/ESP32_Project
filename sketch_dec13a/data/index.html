@@ -27,6 +27,20 @@
   <br>
   <img src="saved-photo" id="photo" width="20%">
   </div>
+
+  <div id="servo-container">
+    <p>UP and DOWN</p>
+    <!-- <label for="servoSlider1">Servo 1 Position:</label> -->
+    <input type="range" min="5" max="50" class="slider" id="servoSlider1"
+        onchange="controlServo(1, this.value)" value="90" />
+    <p id="servoPos1">90</p>
+
+    <p>LEFT and RIGHT:</p>
+    <!-- <label for="servoSlider2">Servo 2 Position:</label> -->
+    <input type="range" min="0" max="180" class="slider" id="servoSlider2"
+        onchange="controlServo(2, this.value)" value="90" />
+    <p id="servoPos2">90</p>
+</div>
 </div>
 </body>
 <script>
@@ -120,14 +134,16 @@ function emailPhoto() {
     xhr.send();
 }
 
-// // Add onbeforeunload event
-// window.onbeforeunload = function() {
-//     // Perform cleanup actions here
-//     // For example, you can send a message to the server indicating that the user is leaving
-//     if (socket && socket.readyState == WebSocket.OPEN) {
-//         socket.send("userLeaving");
-//     }
-// };
+function controlServo(servoNumber, position) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', "/control-servo?servo=" + servoNumber + "&position=" + position, true);
+        xhr.send();
+        updateServoPosition(servoNumber, position);
+    }
+
+    function updateServoPosition(servoNumber, position) {
+        document.getElementById('servoPos' + servoNumber).innerHTML = position;
+    }
 
 
 </script>
