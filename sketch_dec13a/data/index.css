@@ -47,6 +47,7 @@ h1 {
     font-size: 2em;
     margin-bottom: 20px;
 }
+
 #button-container {
     margin-top: 20px;
     display: flex;
@@ -167,4 +168,58 @@ transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 top: -45%;
 background-color: #ffffff;
 transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+}
+
+#servo-container {
+    position: absolute;
+    right: 30%; /* Adjust the distance from the right edge */
+    top: 30%;
+    transform: translateY(-50%);
+    width: 220px; /* Adjust the width of the container as needed */
+    text-align: center; /* Align the content to the left */
+    z-index: 1; /* Ensure the sliders appear above other elements */
+    border: 2px solid #999; /* Add border */
+    border-radius: 10px; /* Add border radius */
+    padding: 20px; /* Add padding inside the container */
+    background-color: #333; /* Add darker background color */
+}
+
+#servo-container p {
+    margin-bottom: 15px; /* Add space between paragraphs */
+}
+
+.slider-container {
+    width: 100%; /* Set width to 100% */
+}
+
+.slider {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 100%; /* Set the width of the slider */
+    height: 15px; /* Set the height of the slider */
+    border-radius: 20px; /* Make the corners more round */
+    background: #555; /* Set darker background color */
+    outline: none; /* Remove the outline */
+    opacity: 0.9; /* Set the initial opacity */
+    transition: opacity 0.2s; /* Add transition for smoother changes */
+}
+
+/* Customize the appearance of the slider thumb */
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none;
+    width: 25px; /* Set the width of the thumb */
+    height: 25px; /* Set the height of the thumb */
+    border-radius: 50%; /* Make it round */
+    background: #ccc; /* Set the color of the thumb */
+    cursor: pointer; /* Add cursor pointer */
+}
+
+/* Adjust the appearance of the slider thumb on different browsers */
+.slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #ccc;
+    cursor: pointer;
 }

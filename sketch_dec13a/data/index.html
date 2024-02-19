@@ -7,41 +7,38 @@
     <title>Ivaylo's Surveillance Camera</title>
 </head>
 <body>
-<div id="container">
-   <h1>WebSocket Camera Feed</h1>
-   <div id="button-container">
-    <button onclick="capturePhoto()" class="capture_email_button">CAPTURE PHOTO</button>
-    <button onclick="location.reload()" class="Refresh_button" type="button">
-        <svg viewBox="0 0 16 16" class="bi bi-arrow-repeat" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
-        <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
-        <path d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" fill-rule="evenodd"></path>
-      </svg>
-          REFRESH
-      </button>
+    <div id="container">
+        <h1>WebSocket Camera Feed</h1>
+        <div id="button-container">
+             <button onclick="capturePhoto()" class="capture_email_button">CAPTURE PHOTO</button>
+             <button onclick="location.reload()" class="Refresh_button" type="button">
+                 <svg viewBox="0 0 16 16" class="bi bi-arrow-repeat" fill="currentColor" height="16" width="16" xmlns="http://www.w3.org/2000/svg">
+                     <path d="M11.534 7h3.932a.25.25 0 0 1 .192.41l-1.966 2.36a.25.25 0 0 1-.384 0l-1.966-2.36a.25.25 0 0 1 .192-.41zm-11 2h3.932a.25.25 0 0 0 .192-.41L2.692 6.23a.25.25 0 0 0-.384 0L.342 8.59A.25.25 0 0 0 .534 9z"></path>
+                     <path d="M8 3c-1.552 0-2.94.707-3.857 1.818a.5.5 0 1 1-.771-.636A6.002 6.002 0 0 1 13.917 7H12.9A5.002 5.002 0 0 0 8 3zM3.1 9a5.002 5.002 0 0 0 8.757 2.182.5.5 0 1 1 .771.636A6.002 6.002 0 0 1 2.083 9H3.1z" fill-rule="evenodd"></path>
+                 </svg>
+                 REFRESH
+             </button>
+           
+             <button  onclick="emailPhoto();" class="capture_email_button">EMAIL PHOTO</button>
+             <button onclick="toggleFlashlight()" class="capture_email_button">Flashlight</button>
+        </div>
+        <div id="live-container">
+             <img id="live" src="">
+             <br>
+             <img src="saved-photo" id="photo" width="20%">
+             
+             <div id="servo-container">
+                 <p>UP and DOWN</p>
+                 <input type="range" min="0" max="50" class="slider" id="servoSlider1" value="25" />
+                 <p id="servoPos1">25</p>
+             
+                 <p>LEFT and RIGHT:</p>
+                 <input type="range" min="0" max="180" class="slider" id="servoSlider2" value="90" />
+                 <p id="servoPos2">90</p>
+             </div>
+        </div> 
+     </div>
       
-    <button  onclick="emailPhoto();" class="capture_email_button">EMAIL PHOTO</button>
-        <button onclick="toggleFlashlight()" class="capture_email_button">Flashlight</button>
-   </div>
-  <div id="live-container">
-  <img id="live" src="">
-  <br>
-  <img src="saved-photo" id="photo" width="20%">
-  </div>
-
-  <div id="servo-container">
-    <p>UP and DOWN</p>
-    <!-- <label for="servoSlider1">Servo 1 Position:</label> -->
-    <input type="range" min="5" max="50" class="slider" id="servoSlider1"
-        onchange="controlServo(1, this.value)" value="90" />
-    <p id="servoPos1">90</p>
-
-    <p>LEFT and RIGHT:</p>
-    <!-- <label for="servoSlider2">Servo 2 Position:</label> -->
-    <input type="range" min="0" max="180" class="slider" id="servoSlider2"
-        onchange="controlServo(2, this.value)" value="90" />
-    <p id="servoPos2">90</p>
-</div>
-</div>
 </body>
 <script>
 var gateway = `ws://${window.location.hostname}/ws`;
@@ -134,16 +131,50 @@ function emailPhoto() {
     xhr.send();
 }
 
-function controlServo(servoNumber, position) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', "/control-servo?servo=" + servoNumber + "&position=" + position, true);
-        xhr.send();
-        updateServoPosition(servoNumber, position);
-    }
+function setupSlider(servoId) {
+    var slider = document.getElementById(`servoSlider${servoId}`);
+    slider.addEventListener('change', function(event) {
+        var angle = event.target.value;
+        updateServoAngle(servoId, angle);
+    });
+}
 
-    function updateServoPosition(servoNumber, position) {
-        document.getElementById('servoPos' + servoNumber).innerHTML = position;
-    }
+function updateServoAngle(servoId, angle) {
+    // Update the displayed angle value
+    document.getElementById(`servoPos${servoId}`).textContent = angle;
+
+    // Send the servo angle to the ESP32-CAM server
+    setServoAngle(servoId, angle);
+}
+
+function setServoAngle(servoId, angle) {
+    // Create a new XMLHttpRequest object
+    var xhr = new XMLHttpRequest();
+    
+    // Configure the request
+    xhr.open("GET", `/set-servo-angle?servoId=${servoId}&angle=${angle}`, true);
+
+    // Define the callback function to handle the server response
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4) {
+            if (xhr.status == 200) {
+                // Request was successful, handle response if needed
+                console.log(xhr.responseText);
+            } else {
+                // Request failed, handle error if needed
+                console.error("Failed to set servo angle");
+            }
+        }
+    };
+
+    // Send the GET request
+    xhr.send();
+}
+
+// Call setupSlider for each servo
+setupSlider(1); // For servo 1
+setupSlider(2); // For servo 2
+
 
 
 </script>

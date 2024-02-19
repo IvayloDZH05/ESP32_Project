@@ -15,9 +15,9 @@
 #include <PubSubClient.h>
 
 // Replace with your network credentials
-const char* ssid = "NOthingPhone_1";
+const char* ssid = "NothingPhone_1";
 const char* password = "ivoRD2005";
-const char* mqttServer = "localhost";
+const char* mqttServer = "192.168.1.100";
 const int mqttPort = 1883;
 const char* mqttTopic = "servo_control";
 
@@ -334,25 +334,10 @@ server.on("/saved-photo", HTTP_GET, [](AsyncWebServerRequest *request) {
     }
     
 });
-//server.on("/move-left", HTTP_GET, [](AsyncWebServerRequest *request) {
-//    // Add code to move the servo to the left
-//    // This could involve sending a command to the ESP32 to control the servo
-//    char command = 'L';
-//    webSocket.sendBinary((uint8_t*)&command, sizeof(command));  // Send 'L' command to the ESP32 using sendBinary
-//
-//    // Send a response message to the client
-//    request->send(200, "text/plain", "Moving servo left");
-//});
-//
-//server.on("/move-right", HTTP_GET, [](AsyncWebServerRequest *request) {
-//    // Add code to move the servo to the right
-//    // This could involve sending a command to the ESP32 to control the servo
-//    char command = 'R';
-//    webSocket.sendBinary((uint8_t*)&command, sizeof(command));  // Send 'R' command to the ESP32 using sendBinary
-//
-//    // Send a response message to the client
-//    request->send(200, "text/plain", "Moving servo right");
-//});
+
+server.on("/set-servo-angle", HTTP_GET, [](AsyncWebServerRequest *request){
+    handleSetServoAngle(request);
+});
 
   // Start server
   server.begin();
@@ -375,6 +360,22 @@ void loop() {
     checkPIRMotion();
     lastPIRCheckTime = millis(); // Update the last check time
   }
+
+    if (takeNewPhoto) {
+    capturePhotoSaveLittleFS  ();
+    takeNewPhoto = false;
+  }
+  if (!emailSent){
+    String emailMessage = "Photo captured and emailed using an ESP32-CAM.";
+    if(sendEmailNotification(emailMessage)) {
+      Serial.println(emailMessage);
+      emailSent = true;
+    }
+    else {
+      Serial.println("Email failed to send");
+    }    
+  }
+  delay(1);
 }
 
 
@@ -402,8 +403,6 @@ void checkPIRMotion() {
     delay(100);
     #endif
 }
-
-
 
 
 bool checkPhoto( fs::FS &fs ) {
@@ -488,7 +487,7 @@ bool sendEmailNotification(String emailMessage){
   message.sender.email = emailSenderAccount;
 
   message.subject = emailSubject;
-  message.addRecipient("Sara", inputMessage.c_str());
+  message.addRecipient("Ivaylo", inputMessage.c_str());
 
   String htmlMsg = emailMessage;
   message.html.content = htmlMsg.c_str();
@@ -574,6 +573,31 @@ void handleFlashAction(AsyncWebServerRequest *request) {
     }
 
     request->send(200, "text/plain", "OK");
+}
+
+void handleSetServoAngle(AsyncWebServerRequest *request) {
+    if (request->method() == HTTP_GET) {
+        // Get the servo ID and angle from the request parameters
+        String servoIdStr = request->arg("servoId");
+        String angleStr = request->arg("angle");
+
+        // Concatenate servo ID and angle into a single string
+        String message = servoIdStr + ":" + angleStr;
+
+        // Publish servo ID and angle via MQTT using the predefined topic
+        String topic = mqttTopic;
+        client.publish(topic.c_str(), message.c_str());
+
+        // Print the sent message to the serial monitor
+        Serial.print("Sent message over MQTT: ");
+        Serial.println(message);
+
+        // Send response to the client
+        request->send(200, "text/plain", "Servo angle updated");
+    } else {
+        // If the request method is not GET, send a 405 Method Not Allowed response
+        request->send(405, "text/plain", "Method Not Allowed");
+    }
 }
 
 void callback(char *topic, byte *payload, unsigned int length) {
