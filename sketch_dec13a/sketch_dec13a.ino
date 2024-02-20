@@ -15,8 +15,8 @@
 #include <PubSubClient.h>
 
 // Replace with your network credentials
-const char* ssid = "NothingPhone_1";
-const char* password = "ivoRD2005";
+const char* ssid = "Redmi Note 8 Pro";
+const char* password = "987654321";
 const char* mqttServer = "192.168.1.100";
 const int mqttPort = 1883;
 const char* mqttTopic = "servo_control";

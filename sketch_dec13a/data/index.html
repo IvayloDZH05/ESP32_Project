@@ -129,7 +129,13 @@ function emailPhoto() {
     var xhr = new XMLHttpRequest();
     xhr.open('GET', "/email-photo", true);
     xhr.send();
+
+    // Reload the page after 35 seconds
+    setTimeout(function() {
+        location.reload();
+    }, 60000); // 35 seconds in milliseconds
 }
+
 
 function setupSlider(servoId) {
     var slider = document.getElementById(`servoSlider${servoId}`);
