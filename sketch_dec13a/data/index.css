@@ -7,31 +7,27 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 100vh;
+    text-align: center;
+    --s: 200px; /* control the size */
+    --c1: #1d1d1d;
+    --c2: #4e4f51;
+    --c3: #3c3c3c;
+    background: repeating-conic-gradient(
+        from 30deg,
+        #0000 0 120deg,
+        var(--c3) 0 180deg
+    )
+    calc(0.5 * var(--s)) calc(0.5 * var(--s) * 0.577),
+    repeating-conic-gradient(
+        from 30deg,
+        var(--c1) 0 60deg,
+        var(--c2) 0 120deg,
+        var(--c3) 0 180deg
+    );
+    background-size: var(--s) calc(var(--s) * 0.577);
+    
 }
-#container {
-width: 100%;
-height: 100%;
-text-align: center;
---s: 200px; /* control the size */
---c1: #1d1d1d;
---c2: #4e4f51;
---c3: #3c3c3c;
 
-background: repeating-conic-gradient(
-from 30deg,
-#0000 0 120deg,
-var(--c3) 0 180deg
-)
-calc(0.5 * var(--s)) calc(0.5 * var(--s) * 0.577),
-repeating-conic-gradient(
-from 30deg,
-var(--c1) 0 60deg,
-var(--c2) 0 120deg,
-var(--c3) 0 180deg
-);
-background-size: var(--s) calc(var(--s) * 0.577);
-}
 #live {
     border: 2px solid #000000b6;
     box-shadow: 0 0 20px #000000b6;
@@ -39,10 +35,12 @@ background-size: var(--s) calc(var(--s) * 0.577);
     margin-top: 30px;
     margin-right: 30%;
 }
-#photo{
-    margin-top: 10px;
-    margin-right: 30%;
+
+#photo {
+    margin-top: 15px;
+    margin-right: 5%;
 }
+
 h1 {
     font-size: 2em;
     margin-bottom: 20px;
@@ -54,6 +52,7 @@ h1 {
     justify-content: center;
     align-items: center;
 }
+
 button {
     margin: 0 10px; /* Add margin for space */
     padding: 10px 20px;
@@ -65,118 +64,74 @@ button {
     cursor: pointer;
 }
 
-.Refresh_button {
-color: white;
-background-color: #222;
-font-weight: 500;
-border-radius: 0.5rem;
-font-size: 1rem;
-line-height: 2rem;
-padding-left: 2rem;
-padding-right: 2rem;
-padding-top: 0.7rem;
-padding-bottom: 0.7rem;
-text-align: center;
-margin-right: 0.5rem;
-display: inline-flex;
-align-items: center;
-border: none;
+.capture_email_refresh_button {
+    display: inline-block;
+    padding: 12px 24px;
+    border: 1px solid #000000b6;
+    border-radius: 5px;
+    transition: all 0.2s ease-in;
+    background-color: #000000b6;
+    position: relative;
+    overflow: hidden;
+    font-size: 17px;
+    color: rgb(255, 255, 255);
+    z-index: 1;
 }
 
-.Refresh_button:hover {
-background-color: #333;
+.capture_email_refresh_button:before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.25);
+    top: 100%;
+    width: 140%;
+    height: 180%;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
 }
 
-.Refresh_button svg {
-display: inline;
-width: 1.0rem;
-height: 1.0rem;
-margin-right: 0.75rem;
-color: white;
+.capture_email_refresh_button:after {
+    content: "";
+    position: absolute;
+    left: 55%;
+    transform: translateX(-50%) scaleY(1) scaleX(1.45);
+    top: 180%;
+    width: 160%;
+    height: 190%;
+    background-color: #000000;
+    border-radius: 50%;
+    display: block;
+    transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
+    z-index: -1;
 }
 
-.Refresh_button:focus svg {
-animation: spin_357 0.5s linear;
+.capture_email_refresh_button:hover {
+    color: #000000;
+    border: 1px solid #eeeeee;
 }
 
-@keyframes spin_357 {
-from {
-transform: rotate(0deg);
+.capture_email_refresh_button:hover:before {
+    top: -35%;
+    background-color: #ffffff;
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
-to {
-transform: rotate(360deg);
-}
-}
-
-.capture_email_button {
-display: inline-block;
-padding: 12px 24px;
-border: 1px solid #000000b6;
-border-radius: 5px;
-transition: all 0.2s ease-in;
-background-color: #000000b6;
-position: relative;
-overflow: hidden;
-font-size: 17px;
-color: rgb(255, 255, 255);
-z-index: 1;
-}
-
-.capture_email_button:before {
-content: "";
-position: absolute;
-left: 50%;
-transform: translateX(-50%) scaleY(1) scaleX(1.25);
-top: 100%;
-width: 140%;
-height: 180%;
-background-color: rgba(0, 0, 0, 0.05);
-border-radius: 50%;
-display: block;
-transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
-z-index: -1;
-}
-
-.capture_email_button:after {
-content: "";
-position: absolute;
-left: 55%;
-transform: translateX(-50%) scaleY(1) scaleX(1.45);
-top: 180%;
-width: 160%;
-height: 190%;
-background-color: #000000;
-border-radius: 50%;
-display: block;
-transition: all 0.5s 0.1s cubic-bezier(0.55, 0, 0.1, 1);
-z-index: -1;
-}
-
-.capture_email_button:hover {
-color: #000000;
-border: 1px solid #eeeeee;
-}
-
-.capture_email_button:hover:before {
-top: -35%;
-background-color: #ffffff;
-transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
-}
-
-.capture_email_button:hover:after {
-top: -45%;
-background-color: #ffffff;
-transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
+.capture_email_refresh_button:hover:after {
+    top: -45%;
+    background-color: #ffffff;
+    transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
 }
 
 #servo-container {
     position: absolute;
-    right: 30%; /* Adjust the distance from the right edge */
-    top: 30%;
+    right: 5%; /* Adjust the distance from the right edge */
+    top: 40%; /* Adjust the vertical position */
     transform: translateY(-50%);
-    width: 220px; /* Adjust the width of the container as needed */
-    text-align: center; /* Align the content to the left */
+    width: 400px; /* Increase the width of the container */
+    text-align: center; /* Align the content to the center */
     z-index: 1; /* Ensure the sliders appear above other elements */
     border: 2px solid #999; /* Add border */
     border-radius: 10px; /* Add border radius */
@@ -222,4 +177,157 @@ transform: translateX(-50%) scaleY(1.3) scaleX(0.8);
     border-radius: 50%;
     background: #ccc;
     cursor: pointer;
+}
+
+/* Apply responsive styles using media queries */
+/* For screens smaller than 576px (phones) */
+@media (max-width: 576px) {
+
+    body{
+        --s: 200px; /* Further increase the size for smaller screens */
+        background-size: var(--s) calc(var(--s) * 0.577);
+    }
+
+    #live {
+        margin: 20px auto; /* Center the live image horizontally */
+        display: block; /* Ensure it is displayed as a block element */
+    }
+
+    #photo {
+        margin-top: 10px; /* Add margin to the top */
+        margin-bottom: 20px; /* Add margin to the bottom */
+        display: block; /* Ensure it is displayed as a block element */
+        width: 70%; /* Adjust the width of the captured photo */
+        margin-left: auto; /* Center the image horizontally */
+        margin-right: auto; /* Center the image horizontally */
+    }
+
+    h1 {
+        font-size: 1.5em; /* Decrease font size */
+    }
+
+    #button-container {
+        flex-direction: column; /* Stack buttons vertically */
+        align-items: center; /* Center align buttons */
+    }
+
+    .capture_email_refresh_button,
+    .Refresh_button {
+        width: 80%; /* Set buttons to 80% width */
+        margin: 6px 0; /* Add margin top and bottom */
+    }
+
+    button {
+        margin: 10px 0; /* Add margin top and bottom */
+    }
+
+    #servo-container {
+        position: relative; /* Change positioning to relative */
+        top: auto; /* Reset top positioning */
+        right: auto; /* Reset right positioning */
+        width: 80%; /* Adjust width */
+        margin: 20px auto; /* Center the container horizontally and add margin from top */
+        transform: none; /* Reset transform */
+    }
+}
+
+
+@media (max-width: 768px) {
+
+    body {
+        --s: 200px; /* Further increase the size for smaller screens */
+        background-size: var(--s) calc(var(--s) * 0.577);
+    }
+
+    #live{
+        margin: 20px auto; /* Center the images horizontally */
+        display: block; /* Ensure they are displayed as block elements */
+    }
+
+    #photo {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        display: block;
+        width: 40%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    #servo-container {
+        position: relative; /* Change positining to relative */
+        top: auto; /* Reset top positioning */
+        right: auto; /* Reset right positioning */
+        width: 50%; /* Adjust width */
+        margin: 300px auto; /* Center the container horizontally and add margin from top */
+        transform: none; /* Reset transform */
+    }
+}
+
+
+/* For screens smaller than 1024px */
+@media (max-width: 1024px) {
+
+    body{
+        --s: 200px; /* Increase the size for smaller screens */
+        background-size: var(--s) calc(var(--s) * 0.577);
+    }
+
+    #live{
+        margin: 20px auto; /* Center the images horizontally */
+        display: block; /* Ensure they are displayed as block elements */
+    }
+
+    #photo {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        display: block;
+        width: 40%;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    #servo-container {
+        position: relative; /* Change positioning to relative */
+        top: auto; /* Reset top positioning */
+        right: auto; /* Reset right positioning */
+        width: 60%; /* Adjust width */
+        margin: 20px auto; /* Center the container horizontally and add margin from top */
+        transform: none; /* Reset transform */
+    }
+
+    button {
+        padding: 15px 30px; /* Increase padding for bigger buttons */
+        font-size: 1.2em; /* Increase font size */
+    }
+
+}
+
+/* For screens smaller than 1440px */
+@media (max-width: 1440px) {
+    #servo-container {
+        position: relative; /* Change positioning to relative */
+        top: auto; /* Reset top positioning */
+        right: auto; /* Reset right positioning */
+        width: 50%; /* Adjust width */
+        margin: 20px auto; /* Center the container horizontally and add margin from top */
+        transform: none; /* Reset transform */
+    }
+
+    button {
+        padding: 15px 30px; /* Increase padding for bigger buttons */
+        font-size: 1.2em; /* Increase font size */
+    }
+
+    #live{
+        margin: 20px auto; /* Center the images horizontally */
+        display: block; /* Ensure they are displayed as block elements */
+    }
+
+    #photo {
+        margin-top: 10px;
+        margin-bottom: 20px;
+        display: block;
+        width: 40%;
+        margin-left: auto;
+        margin-right: auto;
+    }
 }

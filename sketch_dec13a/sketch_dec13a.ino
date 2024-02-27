@@ -1,4 +1,4 @@
-#include "esp_camera.h"
+  #include "esp_camera.h"
 #include "esp_timer.h"
 #include "img_converters.h"
 #include "soc/soc.h"           // Disable brownout problems
@@ -411,49 +411,54 @@ bool checkPhoto( fs::FS &fs ) {
   return ( pic_sz > 100 );
 }
 
-void capturePhotoSaveLittleFS( void ) {
-  camera_fb_t * fb = NULL; // pointer
-  bool ok = 0; // Boolean indicating if the picture has been taken correctly
+void capturePhotoSaveLittleFS(void) {
+    // Turn on the flashlight
+    digitalWrite(FLASHLIGHT_LED_PIN, HIGH);
 
-  do {
-    // Take a photo with the camera
-    Serial.println("Taking a photo...");
+    camera_fb_t *fb = NULL; // pointer
+    bool ok = false; // Boolean indicating if the picture has been taken correctly
 
-    // Clean previous buffer
-    camera_fb_t * fb = NULL;
-    fb = esp_camera_fb_get();
-    esp_camera_fb_return(fb); // dispose the buffered image
-    fb = NULL; // reset to capture errors
-    // Get fresh image
-    fb = esp_camera_fb_get();
-    if(!fb) {
-      Serial.println("Camera capture failed");
-      delay(1000);
-      ESP.restart();
-    }
-    // Photo file name
-    Serial.printf("Picture file name: %s\n", FILE_PHOTO_PATH);
-    File file = LittleFS.open(FILE_PHOTO_PATH, FILE_WRITE);
+    do {
+        // Take a photo with the camera
+        Serial.println("Taking a photo...");
 
-    // Insert the data in the photo file
-    if (!file) {
-      Serial.println("Failed to open file in writing mode");
-    }
-    else {
-      file.write(fb->buf, fb->len); // payload (image), payload length
-      Serial.print("The picture has been saved in ");
-      Serial.print(FILE_PHOTO_PATH);
-      Serial.print(" - Size: ");
-      Serial.print(fb->len);
-      Serial.println(" bytes");
-    }
-    // Close the file
-    file.close();
-    esp_camera_fb_return(fb);
+        // Clean previous buffer
+        fb = esp_camera_fb_get();
+        esp_camera_fb_return(fb); // dispose the buffered image
+        fb = NULL; // reset to capture errors
+        // Get fresh image
+        fb = esp_camera_fb_get();
+        if (!fb) {
+            Serial.println("Camera capture failed");
+            delay(1000);
+            ESP.restart();
+        }
+        // Photo file name
+        Serial.printf("Picture file name: %s\n", FILE_PHOTO_PATH);
+        File file = LittleFS.open(FILE_PHOTO_PATH, FILE_WRITE);
 
-    // check if file has been correctly saved in LittleFS
-    ok = checkPhoto(LittleFS);
-  } while ( !ok );
+        // Insert the data in the photo file
+        if (!file) {
+            Serial.println("Failed to open file in writing mode");
+        }
+        else {
+            file.write(fb->buf, fb->len); // payload (image), payload length
+            Serial.print("The picture has been saved in ");
+            Serial.print(FILE_PHOTO_PATH);
+            Serial.print(" - Size: ");
+            Serial.print(fb->len);
+            Serial.println(" bytes");
+        }
+        // Close the file
+        file.close();
+        esp_camera_fb_return(fb);
+
+        // check if file has been correctly saved in LittleFS
+        ok = checkPhoto(LittleFS);
+    } while (!ok);
+
+    // Turn off the flashlight after capturing the photo
+    digitalWrite(FLASHLIGHT_LED_PIN, LOW);
 }
 
 bool sendEmailNotification(String emailMessage){
