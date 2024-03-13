@@ -1,0 +1,58 @@
+<!DOCTYPE HTML><html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <script src="home.css"></script>    
+    <title>Ivaylo's Surveillance Camera</title>
+</head>
+<body>
+    <div id="container">
+        <h1>WebSocket Camera Feed</h1>
+            
+<!-- Clock Container -->
+    <div id="clock-container" class="clock-container">
+        <p id="time" class="clock"></p>
+    </div>
+
+
+    <!-- Custom Alert HTML -->
+<div id="customAlert" class="custom-alert hidden">
+    <div class="custom-alert-content">
+        <p id="alertText">Изпращането ще е завършено и камерата достъпна след <span id="alertCountdown">60</span> секунди.</p>
+    </div>
+</div>
+
+          <div id="button-container">
+             <button onclick="capturePhoto()" class="capture_email_refresh_button">CAPTURE</button>
+             <button onclick="location.reload()" class="capture_email_refresh_button" type="button">
+                 REFRESH
+             </button>
+           
+             <button  onclick="emailPhoto();" class="capture_email_refresh_button">EMAIL</button>
+             <button id="flashlightButton" onclick="toggleFlashlight()" class="capture_email_refresh_button">FLASHLIGHT</button>
+            </div>
+        <div id="live-container">
+             <img id="live" src="">
+             <br>
+             <img src="saved-photo" id="photo" width="40%">
+             
+             <div id="servo-container">
+                 <p>UP and DOWN</p>
+                 <input type="range" min="0" max="50" class="slider" id="servoSlider1" value="25" />
+                 <p id="servoPos1">25</p>
+             
+                 <p>LEFT and RIGHT:</p>
+                 <input type="range" min="0" max="180" class="slider" id="servoSlider2" value="90" />
+                 <p id="servoPos2">90</p>
+             </div>
+        </div> 
+     </div>
+
+     <footer style="text-align: center; margin-top: 20px;">
+        <p>&copy; 2024 Ivaylo's Surveillance Camera. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

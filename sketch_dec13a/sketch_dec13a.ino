@@ -8,15 +8,15 @@
 #include "WiFi.h"
 #include <StringArray.h>
 //#include <SD.h>
-#include <AsyncTCP.h>
+#include <AsyncTCP.h>   
 #include <ESPAsyncWebServer.h>
 #include <ESP_Mail_Client.h>
 #include <WebSocketsServer.h>
 #include <PubSubClient.h>
 
 // Replace with your network credentials
-const char* ssid = "Redmi Note 8 Pro";
-const char* password = "987654321";
+const char* ssid = "NET1";
+const char* password = "803-_-308";
 const char* mqttServer = "192.168.1.100";
 const int mqttPort = 1883;
 const char* mqttTopic = "servo_control";

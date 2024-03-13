@@ -1,43 +1,3 @@
-<!DOCTYPE HTML><html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="index.css">
-    <link rel="icon" href="/campany-icon.ico" type="image/x-icon" />
-    <title>Ivaylo's Surveillance Camera</title>
-</head>
-<body>
-    <div id="container">
-        <h1>WebSocket Camera Feed</h1>
-        <div id="button-container">
-             <button onclick="capturePhoto()" class="capture_email_refresh_button">CAPTURE</button>
-             <button onclick="location.reload()" class="capture_email_refresh_button" type="button">
-                 REFRESH
-             </button>
-           
-             <button  onclick="emailPhoto();" class="capture_email_refresh_button">EMAIL</button>
-             <button onclick="toggleFlashlight()" class="capture_email_refresh_button">FLASHLIGHT</button>
-        </div>
-        <div id="live-container">
-             <img id="live" src="">
-             <br>
-             <img src="saved-photo" id="photo" width="40%">
-             
-             <div id="servo-container">
-                 <p>UP and DOWN</p>
-                 <input type="range" min="0" max="50" class="slider" id="servoSlider1" value="25" />
-                 <p id="servoPos1">25</p>
-             
-                 <p>LEFT and RIGHT:</p>
-                 <input type="range" min="0" max="180" class="slider" id="servoSlider2" value="90" />
-                 <p id="servoPos2">90</p>
-             </div>
-        </div> 
-     </div>
-      
-</body>
-<script>
 var gateway = `ws://${window.location.hostname}/ws`;
 var socket;
 var userPresent = true; // Assume the user is initially present
@@ -105,7 +65,19 @@ setInterval(function() {
     }
 }
 
+var isFlashlightOn = false; // This variable keeps track of the flashlight state
+
 function toggleFlashlight() {
+    // Reference the flashlight button using its ID
+    var flashlightBtn = document.getElementById('flashlightButton');
+
+    // Check the current state of the flashlight and change it
+    isFlashlightOn = !isFlashlightOn;
+
+    // Update the button text based on the flashlight state
+    flashlightBtn.textContent = isFlashlightOn ? "FLASHLIGHT ON" : "FLASHLIGHT OFF";
+
+    // Send the toggle command to the server via WebSocket
     if (socket && socket.readyState == WebSocket.OPEN) {
         socket.send("toggleFlashlight");
     }
@@ -123,15 +95,28 @@ function capturePhoto() {
 }
 
 function emailPhoto() {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', "/email-photo", true);
-    xhr.send();
+    // Trigger the custom alert
+    document.getElementById('customAlert').style.display = "flex";
+  
+    // Start the countdown
+    var countdown = 60; // Set the countdown time in seconds
+    var alertCountdownElement = document.getElementById('alertCountdown');
+    alertCountdownElement.textContent = countdown; // Display initial countdown time
 
-    // Reload the page after 35 seconds
-    setTimeout(function() {
-        location.reload();
-    }, 60000); // 35 seconds in milliseconds
+    var countdownTimer = setInterval(function() {
+        countdown -= 1;
+        alertCountdownElement.textContent = countdown;
+
+        if (countdown <= 0) {
+            clearInterval(countdownTimer);
+            document.getElementById('customAlert').style.display = "none";
+            location.reload(); // Reload the page after countdown reaches zero
+        }
+    }, 1000);
 }
+
+// Remember to replace your existing emailPhoto function with this one.
+
 
 
 function setupSlider(servoId) {
@@ -178,9 +163,25 @@ function setServoAngle(servoId, angle) {
 setupSlider(1); // For servo 1
 setupSlider(2); // For servo 2
 
+function updateClock() {
+    var now = new Date();
+    var hours = now.getHours();
+    var minutes = now.getMinutes();
+    var seconds = now.getSeconds();
+    
+    // Format time to have leading zeros where necessary
+    hours = hours < 10 ? '0' + hours : hours;
+    minutes = minutes < 10 ? '0' + minutes : minutes;
+    seconds = seconds < 10 ? '0' + seconds : seconds;
 
+    var timeString = hours + ':' + minutes + ':' + seconds;
+    
+    // Update the time display
+    document.getElementById('time').textContent = timeString;
+}
 
-</script>
+// Update the time every second
+setInterval(updateClock, 1000);
 
-</body>
-</html>
+// Initialize the clock on page load
+document.addEventListener('DOMContentLoaded', updateClock);
