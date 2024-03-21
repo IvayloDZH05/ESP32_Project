@@ -15,9 +15,9 @@
 #include <PubSubClient.h>
 
 // Replace with your network credentials
-const char* ssid = "NET1";
-const char* password = "803-_-308";
-const char* mqttServer = "192.168.1.100";
+const char* ssid = "Nothing phone (1)";
+const char* password = "ivoRD2005";
+const char* mqttServer = "192.168.22.94";
 const int mqttPort = 1883;
 const char* mqttTopic = "servo_control";
 
@@ -113,7 +113,7 @@ void configCamera() {
     pinMode(FLASHLIGHT_LED_PIN, OUTPUT);
 
     config.frame_size = FRAMESIZE_VGA;
-    config.jpeg_quality = 9;
+    config.jpeg_quality = 10;
     config.fb_count = 2;
 
     esp_err_t err = esp_camera_init(&config);

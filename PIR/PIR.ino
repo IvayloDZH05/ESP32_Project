@@ -1,9 +1,9 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 #include <ESP32Servo.h>
-const char* ssid = "NET1";
-const char* password = "803-_-308";
-const char* mqttServer = "192.168.1.100";
+const char* ssid = "Nothing phone (1)";
+const char* password = "ivoRD2005";
+const char* mqttServer = "192.168.22.94";
 const char* mqttTopic = "servo_control";
 WiFiClient espClient;
 PubSubClient client(espClient);

@@ -28,6 +28,10 @@ body {
     
 }
 
+#container{
+    width: 100%;
+}
+
 footer {
     height: 60px; /* Your footer's height */
     width: 100%;
@@ -125,33 +129,31 @@ span{
     width: 310px; /* Width can be adjusted as needed */
     height: 100;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-    position: relative; /* Position relative for absolute positioning of children */
+    position: relative; 
   }
   
-  /* Input Field Styling */
   #newTitleInput {
-    width: calc(100% - 40px); /* Full width minus padding */
+    width: calc(100% - 40px); 
     padding: 10px;
-    margin-bottom: 10px; /* Space below input */
+    margin-bottom: 10px;
     margin-top: 15px;
     border-radius: 4px;
-    border: 1px solid #555; /* Border color */
-    background: #222; /* Slightly lighter input background */
-    color: #ddd; /* Input text color */
+    border: 1px solid #555;
+    background: #222; 
+    color: #ddd; 
   }
   
-  /* Button Styling */
   .modal-title-content button {
     padding: 10px 15px;
-    margin-top: 10px; /* Space above the button */
-    background-color: #030303; /* Accent color */
-    color: #ffffff; /* Text color */
+    margin-top: 10px; 
+    background-color: #030303; 
+    color: #ffffff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
   }
   
-  /* Close Button ('X') Styling */
+
   .close {
     color: #aaa;
     position: absolute;
@@ -168,15 +170,23 @@ span{
     text-decoration: none;
   }
   
+
 #live {
-    max-width: 100%;
-    margin-top: 30px;
-    margin-right: 30%;
+    width: 680px;
+    margin-top: 125px;
+    margin-right: 25%;
+    transform: rotate(90deg);
 }
 
 #photo {
-    margin-top: 15px;
-    margin-right: 30%;
+    transform: rotate(90deg);
+    width: 300px;
+}
+
+#photo-container{
+    position: absolute;
+    right: 24%; /* Adjust the distance from the right edge */
+    top: 60%; /* Adjust the vertical position */
 }
 
 h1 {
@@ -267,8 +277,8 @@ button {
 
 #servo-container {
     position: absolute;
-    right: 15%; /* Adjust the distance from the right edge */
-    top: 47%; /* Adjust the vertical position */
+    right: 20%; /* Adjust the distance from the right edge */
+    top: 40%; /* Adjust the vertical position */
     transform: translateY(-50%);
     width: 400px; /* Increase the width of the container */
     text-align: center; /* Align the content to the center */
@@ -322,152 +332,121 @@ button {
 /* Apply responsive styles using media queries */
 /* For screens smaller than 576px (phones) */
 @media (max-width: 576px) {
-
-    body{
-        --s: 200px; /* Further increase the size for smaller screens */
-        background-size: var(--s) calc(var(--s) * 0.577);
-    }
-
-    #live {
-        margin: 20px auto; /* Center the live image horizontally */
-        display: block; /* Ensure it is displayed as a block element */
-    }
-
-    #photo {
-        margin-top: 10px; /* Add margin to the top */
-        margin-bottom: 20px; /* Add margin to the bottom */
-        display: block; /* Ensure it is displayed as a block element */
-        width: 70%; /* Adjust the width of the captured photo */
-        margin-left: auto; /* Center the image horizontally */
-        margin-right: auto; /* Center the image horizontally */
-    }
-
-    h1 {
-        font-size: 1.5em; /* Decrease font size */
-    }
-
+    #live{
+        transform: rotate(90deg);
+        width: 100%;
+        margin-top: 130px;
+        margin-bottom: 30px;
+      }
+  
+      #photo {
+          transform: rotate(90deg);
+          width: 70%;
+          margin: 0 auto;
+        }
+    
+      #photo-container{
+        position: relative;
+        right: auto;
+        top: 150px;
+        width: 70%;
+        margin: 0 auto;
+      }
+  
+      #servo-container {
+          position: relative;
+          right: auto;
+          top: 350px;
+          width: 70%;
+          margin: 0 auto;
+        }
+  
     #button-container {
-        flex-direction: column; /* Stack buttons vertically */
-        align-items: center; /* Center align buttons */
+      flex-direction: column;
+      align-items: center;
     }
-
+  
     .capture_email_refresh_button,
     .Refresh_button {
-        width: 80%; /* Set buttons to 80% width */
-        margin: 6px 0; /* Add margin top and bottom */
+      width: 90%;
+      margin: 6px auto;
     }
-
+  
     button {
-        margin: 10px 0; /* Add margin top and bottom */
+      width: 90%;
+      margin: 10px auto;
     }
-
-    #servo-container {
-        position: relative; /* Change positioning to relative */
-        top: auto; /* Reset top positioning */
-        right: auto; /* Reset right positioning */
-        width: 80%; /* Adjust width */
-        margin: 20px auto; /* Center the container horizontally and add margin from top */
-        transform: none; /* Reset transform */
-    }
-}
-
-
-@media (max-width: 768px) {
-
-    body {
-        --s: 200px; /* Further increase the size for smaller screens */
-        background-size: var(--s) calc(var(--s) * 0.577);
-    }
-
-    #live{
-        margin: 20px auto; /* Center the images horizontally */
-        display: block; /* Ensure they are displayed as block elements */
+  }
+  
+  @media (max-width: 768px) {
+    #live {
+      transform: rotate(90deg);
+      width: 80%;
+      margin: 0 auto;
     }
 
     #photo {
-        margin-top: 10px;
-        margin-bottom: 20px;
-        display: block;
-        width: 40%;
-        margin-left: auto;
-        margin-right: auto;
+        transform: rotate(90deg);
+        width: 80%;
+        margin: 0 auto;
+      }
+  
+    #photo-container {
+      position: relative;
+      right: auto;
+      top: auto;
+      width: 80%;
+      margin: 0 auto;
     }
+
     #servo-container {
-        position: relative; /* Change positining to relative */
-        top: auto; /* Reset top positioning */
-        right: auto; /* Reset right positioning */
-        width: 50%; /* Adjust width */
-        margin: 300px auto; /* Center the container horizontally and add margin from top */
-        transform: none; /* Reset transform */
-    }
-}
+        position: relative;
+        right: auto;
+        top: auto;
+        width: 80%;
+        margin: 0 auto;
+      }
+    
+  }
 
-
-/* For screens smaller than 1024px */
-@media (max-width: 1024px) {
-
-    body{
-        --s: 200px; /* Increase the size for smaller screens */
-        background-size: var(--s) calc(var(--s) * 0.577);
-    }
-
+  
+  @media (max-width: 1024px){
     #live{
-        margin: 20px auto; /* Center the images horizontally */
-        display: block; /* Ensure they are displayed as block elements */
+      transform: rotate(90deg);
+      width: 100%;
+      margin-top: 130px;
+      margin-bottom: 30px;
     }
 
     #photo {
-        margin-top: 10px;
-        margin-bottom: 20px;
-        display: block;
-        width: 40%;
-        margin-left: auto;
-        margin-right: auto;
+        transform: rotate(90deg);
+        width: 70%;
+        margin: 0 auto;
+      }
+  
+    #photo-container{
+      position: relative;
+      right: auto;
+      top: 150px;
+      width: 70%;
+      margin: 0 auto;
     }
 
     #servo-container {
-        position: relative; /* Change positioning to relative */
-        top: auto; /* Reset top positioning */
-        right: auto; /* Reset right positioning */
-        width: 60%; /* Adjust width */
-        margin: 20px auto; /* Center the container horizontally and add margin from top */
-        transform: none; /* Reset transform */
+        position: relative;
+        right: auto;
+        top: 350px;
+        width: 70%;
+        margin: 0 auto;
+      }
+  }
+  
+  @media (min-width: 1440px) {
+    #servo-container{
+        right: 10%;
     }
-
-    button {
-        padding: 15px 30px; /* Increase padding for bigger buttons */
-        font-size: 1.2em; /* Increase font size */
+    #photo-container{
+        right: 15%;
     }
-
-}
-
-/* For screens smaller than 1440px */
-@media (max-width: 1440px) {
-    #servo-container {
-        position: relative; /* Change positioning to relative */
-        top: auto; /* Reset top positioning */
-        right: auto; /* Reset right positioning */
-        width: 50%; /* Adjust width */
-        margin: 20px auto; /* Center the container horizontally and add margin from top */
-        transform: none; /* Reset transform */
-    }
-
-    button {
-        padding: 15px 30px; /* Increase padding for bigger buttons */
-        font-size: 1.2em; /* Increase font size */
-    }
-
-    #live{
-        margin: 20px auto; /* Center the images horizontally */
-        display: block; /* Ensure they are displayed as block elements */
-    }
-
-    #photo {
-        margin-top: 10px;
-        margin-bottom: 20px;
-        display: block;
-        width: 40%;
-        margin-left: auto;
-        margin-right: auto;
-    }
-}
+  }
+  

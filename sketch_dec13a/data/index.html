@@ -42,7 +42,9 @@
             </div>
         <div id="live-container">
              <img id="live" src="">
-              <img src="saved-photo" id="photo" width="22%" >
+             <div id="photo-container">
+              <img src="saved-photo" id="photo" >
+            </div>
              <div id="servo-container">
                  <p>UP and DOWN</p>
                  <input type="range" min="0" max="50" class="slider" id="servoSlider1" value="25" />
@@ -54,10 +56,6 @@
              </div>
         </div> 
     </div>
-
-     <!-- <footer style="text-align: center; margin-top: 20px;">
-        <p>&copy; 2024 Ivaylo's Surveillance Camera. All rights reserved.</p>
-    </footer> -->
 
 <script>
 
@@ -318,6 +316,8 @@ window.onclick = function(event) {
 function closeModal() {
     document.getElementById('editTitleModal').style.display = 'none';
   }
+
+  
   
 </script>   
 </body>
