@@ -294,12 +294,17 @@ if (!LittleFS.begin(true)) {
   });
 
 server.on("/", HTTP_GET, [](AsyncWebServerRequest *request) {
-  request->send(LittleFS, "/index.html", "text/html");
+  request->send(LittleFS, "/CameraFeed.html", "text/html");
 });
 
-  server.on("/index.css", HTTP_GET, [](AsyncWebServerRequest *request){
-    request->send(LittleFS, "/index.css", "text/css");
+  server.on("/CameraFeed.css", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS, "/CameraFeed.css", "text/css");
   });
+
+    server.on("/CameraFeed.js", HTTP_GET, [](AsyncWebServerRequest *request){
+    request->send(LittleFS, "/CameraFeed.js", "text/js");
+  });
+
 
 server.on("/capture", HTTP_GET, [](AsyncWebServerRequest *request) {
     takeNewPhoto = true;
@@ -355,10 +360,9 @@ void loop() {
     liveCam(cam_num);
   }
 
-  // Check PIR sensor state every 10 seconds
-  if (millis() - lastPIRCheckTime >= 10000) {
+  if (millis() - lastPIRCheckTime >= 15000) {
     checkPIRMotion();
-    lastPIRCheckTime = millis(); // Update the last check time
+    lastPIRCheckTime = millis();
   }
 
     if (takeNewPhoto) {
@@ -366,7 +370,7 @@ void loop() {
     takeNewPhoto = false;
   }
   if (!emailSent){
-    String emailMessage = "Photo captured and emailed using an ESP32-CAM.";
+    String emailMessage = "Вашата заснета снимка:";
     if(sendEmailNotification(emailMessage)) {
       Serial.println(emailMessage);
       emailSent = true;
@@ -393,11 +397,10 @@ void checkPIRMotion() {
     Serial.println(pirState);
 
     if (!userPresent && pirState == HIGH) {
-        // Motion detected when the user is not present
         Serial.println("Motion detected!");
         capturePhotoSaveLittleFS();
-        sendEmailNotification("TEST");
-        delay(5000);  // Delay to avoid multiple triggers within a short time
+        sendEmailNotification("Движение беше засечено!!");
+        delay(5000);
     }
 
     delay(100);
@@ -416,7 +419,7 @@ void capturePhotoSaveLittleFS(void) {
     digitalWrite(FLASHLIGHT_LED_PIN, HIGH);
 
     camera_fb_t *fb = NULL; // pointer
-    bool ok = false; // Boolean indicating if the picture has been taken correctly
+    bool ok = false;
 
     do {
         // Take a photo with the camera
@@ -462,10 +465,6 @@ void capturePhotoSaveLittleFS(void) {
 }
 
 bool sendEmailNotification(String emailMessage){
-/** Enable the debug via Serial port
-   * none debug or 0
-   * basic debug or 1
-  */
   smtp.debug(1);
 
   /* Set the callback function to get the sending results */
@@ -502,13 +501,8 @@ bool sendEmailNotification(String emailMessage){
   message.priority = esp_mail_smtp_priority::esp_mail_smtp_priority_normal;
   message.response.notify = esp_mail_smtp_notify_success | esp_mail_smtp_notify_failure | esp_mail_smtp_notify_delay;
 
-  /* The attachment data item */
   SMTP_Attachment att;
 
-  /** Set the attachment info e.g. 
-   * file name, MIME type, file path, file storage type,
-   * transfer encoding and content encoding
-  */
   att.descr.filename = FILE_PHOTO;
   att.descr.mime = "image/png"; 
   att.file.path = FILE_PHOTO_PATH;
@@ -528,10 +522,8 @@ bool sendEmailNotification(String emailMessage){
 
 // Callback function to get the Email sending status
 void smtpCallback(SMTP_Status status){
-  /* Print the current status */
   Serial.println(status.info());
 
-  /* Print the sending result */
   if (status.success())
   {
     Serial.println("----------------");
@@ -542,7 +534,6 @@ void smtpCallback(SMTP_Status status){
 
     for (size_t i = 0; i < smtp.sendingResult.size(); i++)
     {
-      /* Get the result item */
       SMTP_Result result = smtp.sendingResult.getItem(i);
       time_t ts = (time_t)result.timestamp;
 
@@ -614,9 +605,4 @@ void callback(char *topic, byte *payload, unsigned int length) {
     }
     Serial.println();
 
-    if (String(topic) == mqttTopic && String(payload, length) == "Motion Detected!"){
-        Serial.println("Motion detected via MQTT! Triggering functions...");
-        takeNewPhoto = true; // Trigger photo capture
-        emailSent = false;   // Allow email sending again
-    }
 }

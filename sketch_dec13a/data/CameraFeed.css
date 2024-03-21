@@ -8,7 +8,7 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    --s: 200px; /* control the size */
+    --s: 200px;
     --c1: #1d1d1d;
     --c2: #4e4f51;
     --c3: #3c3c3c;
@@ -32,50 +32,39 @@ body {
     width: 100%;
 }
 
-footer {
-    height: 60px; /* Your footer's height */
-    width: 100%;
-    position: absolute;
-    bottom: 0;
-    text-align: center;
-    z-index: 2; /* Make sure it's above other content if needed */
-}
-
-/* Clock Container Styles */
 .clock-container {
-    background-color: #333; /* Dark background for the clock */
-    border-radius: 8px; /* Rounded corners */
-    padding: 20px; /* Some padding around the clock */
-    max-width: 200px; /* Maximum width of the container */
-    margin: 0 auto; /* Center the container */
-    box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5); /* Shadow for a bit of depth */
-    margin-top: 20px; /* Spacing from the top */
+  background-color: #333;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 200px;
+  margin: 0 auto;
+  box-shadow: 0px 0px 10px 0px rgba(0,0,0,0.5);
+  margin-top: 20px;
 }
 
-
-/* Custom Alert CSS */
 .custom-alert {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    left: 0;
-    top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-    z-index: 9999; /* Sit on top */
-    justify-content: center;
-    align-items: center;
+  display: none;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
 }
 
 .custom-alert-content {
-    background-color: #444141;
-    margin: auto;
-    padding: 20px;
-    border: 1px solid #000000;
-    border-radius: 20px;
-    width: 300px; /* Adjust as necessary */
-    text-align: center;
+  background-color: #444141;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #000000;
+  border-radius: 20px;
+  width: 300px;
+  text-align: center;
 }
+
 
 .hidden {
     display: none;
@@ -86,51 +75,48 @@ span{
 }
 
 .clock {
-    color: #fff; /* White text color */
-    font-size: 1.5em; /* Size of the clock text */
-    text-align: center; /* Center the text */
-    margin: 0; /* Remove default margins */
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Stylish font-family */
+  color: #fff;
+  font-size: 1.5em;
+  text-align: center;
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-  
 
-/* Icon Size Adjustment */
 #editIcon {
-    cursor: pointer;
-    font-size: 16px; /* Adjust the icon size as needed */
-    vertical-align: middle; /* Aligns icon with the text vertically */
-    margin-left: 5px; /* Adds a little space between the text and the icon */
-  }
-  
-/* Modal Backdrop */
-.modal-title {
-    display: none; /* Hidden by default */
-    position: fixed; /* Stay in place */
-    z-index: 1; /* Sit on top */
+  cursor: pointer;
+  font-size: 16px;
+  vertical-align: middle;
+  margin-left: 5px;
+}
+
+  .modal-title {
+    display: none;
+    position: fixed;
+    z-index: 1;
     left: 0;
     top: 0;
-    width: 100%; /* Full width */
-    height: 100%; /* Full height */
-    overflow: auto; /* Enable scroll if needed */
-    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent black w/ opacity */
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.6);
     display: flex;
-    align-items: center; /* Center the modal content vertically */
-    justify-content: center; /* Center the modal content horizontally */
-  }
-  
-  /* Modal Content */
-  .modal-title-content {
-    background-color: #333; /* Dark background */
-    color: #fff; /* White text */
-    margin: 15% auto; /* 15% from the top and centered */
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-title-content {
+    background-color: #333;
+    color: #fff;
+    margin: 15% auto;
     padding: 20px;
-    border: 1px solid #757575; /* Slight border for definition */
-    border-radius: 8px; /* Rounded corners */
-    width: 310px; /* Width can be adjusted as needed */
+    border: 1px solid #757575;
+    border-radius: 8px;
+    width: 310px;
     height: 100;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Shadow for depth */
-    position: relative; 
-  }
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
   
   #newTitleInput {
     width: calc(100% - 40px); 
@@ -185,8 +171,8 @@ span{
 
 #photo-container{
     position: absolute;
-    right: 24%; /* Adjust the distance from the right edge */
-    top: 60%; /* Adjust the vertical position */
+    right: 24%; 
+    top: 60%;
 }
 
 h1 {
@@ -224,8 +210,8 @@ button {
     font-size: 17px;
     color: rgb(255, 255, 255);
     z-index: 1;
-    width: 200px; /* Example fixed width - adjust as needed */
-    text-align: center; /* Center text within the button */
+    width: 200px; 
+    text-align: center; 
 }
 
 .capture_email_refresh_button:before {
@@ -276,51 +262,50 @@ button {
 }
 
 #servo-container {
-    position: absolute;
-    right: 20%; /* Adjust the distance from the right edge */
-    top: 40%; /* Adjust the vertical position */
-    transform: translateY(-50%);
-    width: 400px; /* Increase the width of the container */
-    text-align: center; /* Align the content to the center */
-    z-index: 1; /* Ensure the sliders appear above other elements */
-    border: 2px solid #999; /* Add border */
-    border-radius: 10px; /* Add border radius */
-    padding: 20px; /* Add padding inside the container */
-    background-color: #333; /* Add darker background color */
+  position: absolute;
+  right: 20%;
+  top: 40%;
+  transform: translateY(-50%);
+  width: 400px;
+  text-align: center;
+  z-index: 1;
+  border: 2px solid #999;
+  border-radius: 10px;
+  padding: 20px;
+  background-color: #333;
 }
 
 #servo-container p {
-    margin-bottom: 15px; /* Add space between paragraphs */
+  margin-bottom: 15px;
 }
 
 .slider-container {
-    width: 100%; /* Set width to 100% */
+  width: 100%;
 }
 
 .slider {
-    -webkit-appearance: none; /* Remove default styling */
-    appearance: none;
-    width: 100%; /* Set the width of the slider */
-    height: 15px; /* Set the height of the slider */
-    border-radius: 20px; /* Make the corners more round */
-    background: #555; /* Set darker background color */
-    outline: none; /* Remove the outline */
-    opacity: 0.9; /* Set the initial opacity */
-    transition: opacity 0.2s; /* Add transition for smoother changes */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 20px;
+  background: #555;
+  outline: none;
+  opacity: 0.9;
+  transition: opacity 0.2s;
 }
 
-/* Customize the appearance of the slider thumb */
 .slider::-webkit-slider-thumb {
-    -webkit-appearance: none; /* Remove default styling */
-    appearance: none;
-    width: 25px; /* Set the width of the thumb */
-    height: 25px; /* Set the height of the thumb */
-    border-radius: 50%; /* Make it round */
-    background: #ccc; /* Set the color of the thumb */
-    cursor: pointer; /* Add cursor pointer */
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #ccc;
+  cursor: pointer;
 }
 
-/* Adjust the appearance of the slider thumb on different browsers */
+
 .slider::-moz-range-thumb {
     width: 25px;
     height: 25px;
@@ -329,8 +314,6 @@ button {
     cursor: pointer;
 }
 
-/* Apply responsive styles using media queries */
-/* For screens smaller than 576px (phones) */
 @media (max-width: 576px) {
     #live{
         transform: rotate(90deg);
@@ -443,10 +426,10 @@ button {
   
   @media (min-width: 1440px) {
     #servo-container{
-        right: 10%;
+        right: 15%;
     }
     #photo-container{
-        right: 15%;
+        right: 20%;
     }
   }
   
