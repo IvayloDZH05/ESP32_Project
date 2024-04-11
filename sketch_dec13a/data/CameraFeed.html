@@ -4,17 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="CameraFeed.css"> 
-    <title>Ivaylo's Surveillance Camera</title>
+    <title>Камера</title>
 </head>
 <body>
     <div id="container">
-        <h1><span id="titleText">WebSocket Camera Feed</span> <span id="editIcon" style="cursor: pointer;">✏️</span></h1>
+        <h1><span id="titleText">Твоята камера</span> <span id="editIcon" style="cursor: pointer;">✏️</span></h1>
 
         <div id="editTitleModal" class="modal-title" style="display:none;">
             <div class="modal-title-content">
-                <input type="text" id="newTitleInput" placeholder="Enter new title here" />
+                <input type="text" id="newTitleInput" placeholder="Въведи ново заглавие тук:" />
                 <span class="close" onclick="closeModal()">&times;</span>
-                <button onclick="applyNewTitle()">Apply</button>
+                <button onclick="applyNewTitle()">Приложи</button>
             </div>
         </div>       
             
@@ -32,13 +32,11 @@
 </div>
 
           <div id="button-container">
-             <button onclick="capturePhoto()" class="capture_email_refresh_button">CAPTURE</button>
-             <button onclick="location.reload()" class="capture_email_refresh_button" type="button">
-                 REFRESH
-             </button>
+             <button onclick="capturePhoto()" class="capture_email_refresh_button">СНИМАЙ</button>
+             <button onclick="location.reload()" class="capture_email_refresh_button" type="button">ОБНОВИ</button>
            
-             <button  onclick="emailPhoto();" class="capture_email_refresh_button">EMAIL</button>
-             <button id="flashlightButton" onclick="toggleFlashlight()" class="capture_email_refresh_button">FLASHLIGHT</button>
+             <button  onclick="emailPhoto();" class="capture_email_refresh_button">ИЗПРАТИ</button>
+             <button id="flashlightButton" onclick="toggleFlashlight()" class="capture_email_refresh_button">ФЕНЕРЧЕ</button>
             </div>
         <div id="live-container">
              <img id="live" src="">
@@ -46,13 +44,13 @@
               <img src="saved-photo" id="photo" >
             </div>
              <div id="servo-container">
-                 <p>UP and DOWN</p>
+                 <p>Нагоре и Надолу</p>
                  <input type="range" min="0" max="50" class="slider" id="servoSlider1" value="25" />
-                 <p id="servoPos1">25</p>
+                 <p id="servoPos1">0</p>
              
-                 <p>LEFT and RIGHT:</p>
+                 <p>Наляво и Надясно:</p>
                  <input type="range" min="0" max="180" class="slider" id="servoSlider2" value="90" />
-                 <p id="servoPos2">90</p>
+                 <p id="servoPos2">0</p>
              </div>
         </div> 
     </div>

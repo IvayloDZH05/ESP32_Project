@@ -17,7 +17,7 @@
 // Replace with your network credentials
 const char* ssid = "Nothing phone (1)";
 const char* password = "ivoRD2005";
-const char* mqttServer = "192.168.22.94";
+const char* mqttServer = "192.168.182.94";
 const int mqttPort = 1883;
 const char* mqttTopic = "servo_control";
 
@@ -26,7 +26,7 @@ const char* mqttTopic = "servo_control";
 #define emailSenderPassword   "wfczkmzpktlsxuqj"
 #define smtpServer            "smtp.gmail.com"
 #define smtpServerPort        465
-#define emailSubject          "ESP32-CAM Photo Captured"
+#define emailSubject          "Заснета снимка от ESP32-CAM"
 
 // Default Recipient Email Address
 String inputMessage = "19212@uktc-bg.com";
@@ -487,11 +487,11 @@ bool sendEmailNotification(String emailMessage){
   message.enable.chunking = true;
 
   /* Set the message headers */
-  message.sender.name = "ESP32-CAM";
+  message.sender.name = "Твоята алармена система";
   message.sender.email = emailSenderAccount;
 
   message.subject = emailSubject;
-  message.addRecipient("Ivaylo", inputMessage.c_str());
+  message.addRecipient("Ивайло Джамбазов", inputMessage.c_str());
 
   String htmlMsg = emailMessage;
   message.html.content = htmlMsg.c_str();

@@ -72,7 +72,7 @@ function toggleFlashlight() {
     isFlashlightOn = !isFlashlightOn;
 
     // Update the button text based on the flashlight state
-    flashlightBtn.textContent = isFlashlightOn ? "FLASHLIGHT ON" : "FLASHLIGHT OFF";
+    flashlightBtn.textContent = isFlashlightOn ? "ФЕНЕРЧЕ ВКЛ." : "ФЕНЕРЧЕ ИЗКЛ.";
 
     // Send the toggle command to the server via WebSocket
     if (socket && socket.readyState == WebSocket.OPEN) {
