@@ -14,11 +14,11 @@ Servo servo1;
 Servo servo2;
 
 struct ServoControl {
-    Servo* servo;           // Pointer to servo
-    int currentAngle;       // Current angle of the servo
-    int targetAngle;        // Target angle to reach
-    unsigned long lastUpdate;  // Last update time
-    int updateInterval;     // Time between updates in milliseconds
+    Servo* servo;          
+    int currentAngle;       
+    int targetAngle;       
+    unsigned long lastUpdate; 
+    int updateInterval;     
 };
 
 ServoControl servoControls[2];
@@ -66,7 +66,7 @@ void callback(char* topic, byte* payload, unsigned int length) {
   
   int indexOfColon = msgString.indexOf(':');
   if (indexOfColon != -1) {
-    int servoId = msgString.substring(0, indexOfColon).toInt() - 1; // assuming servoId is either 1 or 2
+    int servoId = msgString.substring(0, indexOfColon).toInt() - 1;
     int targetAngle = msgString.substring(indexOfColon + 1).toInt();
     
     if (servoId == 0 || servoId == 1) {
@@ -101,11 +101,11 @@ void setup() {
   client.setServer(mqttServer, 1883);
   client.setCallback(callback);
 
-  servo1.attach(33); // GPIO pin where servo 1 is connected
-  servo2.attach(14); // GPIO pin where servo 2 is connected
+  servo1.attach(33);
+  servo2.attach(14);
 
-  servoControls[0] = {&servo1, 90, 90, millis(), 15}; // initialize servo1 to mid position 90 degrees
-  servoControls[1] = {&servo2, 90, 90, millis(), 15}; // initialize servo2 to mid position 90 degrees
+  servoControls[0] = {&servo1, 90, 90, millis(), 15}; 
+  servoControls[1] = {&servo2, 90, 90, millis(), 15}; 
 }
 
 void loop() {
@@ -114,7 +114,6 @@ void loop() {
   }
   client.loop();
 
-  // Continuously update servo positions smoothly
   moveServo(servoControls[0]);
   moveServo(servoControls[1]);
 }

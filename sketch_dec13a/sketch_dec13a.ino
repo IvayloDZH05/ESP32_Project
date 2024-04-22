@@ -7,7 +7,6 @@
 #include <LittleFS.h>
 #include "WiFi.h"
 #include <StringArray.h>
-//#include <SD.h>
 #include <AsyncTCP.h>   
 #include <ESPAsyncWebServer.h>
 #include <ESP_Mail_Client.h>
